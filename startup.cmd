@@ -26,7 +26,8 @@
 # load required modules
 require ecmc        "${ECMC_VER=6.0}"
 require EthercatMC  "${EthercatMC_VER=3.0}"
-require stream      "${stream_VER=kivel}"
+# stream was moved to GNUmakefile 'REQUIRED', this removes the ability to load a specific stream_VER!!!
+# require stream      "${stream_VER=kivel}"
 #
 #-------------------------------------------------------------------------------
 # define default PATH for scripts and database/templates

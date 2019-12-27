@@ -6,6 +6,8 @@ BUILDCLASSES = Linux
 EXCLUDE_VERSIONS=3
 ARCH_FILTER=RHEL%
 
+REQUIRED = stream
+
 SCRIPTS+=startup.cmd
 
 SCRIPTS+=$(wildcard ./scripts/*)
