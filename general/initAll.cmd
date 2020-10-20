@@ -48,4 +48,4 @@ epicsEnvSet("ECMC_GEN_EC_RECORDS",          "-records")
 epicsEnvSet("ECMC_GEN_AX_RECORDS",          "-records")
 
 # Update records in 10ms (100Hz)
-epicsEnvSet("ECMC_SAMPLE_RATE_MS",       "10")
+#epicsEnvSet("ECMC_SAMPLE_RATE_MS",       "10")
