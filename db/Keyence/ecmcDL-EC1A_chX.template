@@ -9,6 +9,8 @@ record(ai,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-PosAct"){
   field(EOFF, "$(EOFF=0)")
   field(EGU,  "$(EGU=V)")
   field(PREC, "$(PREC=7)")
+  field(LOPR, "$(LOPR=0)")
+  field(HOPR, "$(HOPR=0)")
   field(LOW,  "$(LOW=0)")
   field(LOLO, "$(LOLO=0)")
   field(HIGH, "$(HIGH=0)")
@@ -21,72 +23,119 @@ record(ai,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-PosAct"){
   field(TSE,  "$(TSE=-2)")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Inv"){
+record(calcout,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Inv-UDF") {
+  field(DESC,  "description")
+  field(CALC,  "A")
+  field(INPA,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Inv-Alrm CP")
+  field(OUT,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-PosAct.UDF")
+}
+
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Status Word")
   field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): CH$(CH_ID) invalid")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CH${CH_ID}_INV?")
-  field(ZNAM, "$(ZNAM=valid)")
-  field(ONAM, "$(ONAM=invalid)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MAJOR)")
-  field(FLNK, "$(FLNK=)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),0xFFFF,$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).CH$(CH_ID)_STATUS?")
+  field(SCAN, "I/O Intr")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output1.PROC")
   field(TSE,  "$(TSE=-2)")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-UdR"){
-  field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): CH$(CH_ID) underrange")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CH${CH_ID}_UDR?")
-  field(ZNAM, "$(ZNAM=valid)")
-  field(ONAM, "$(ONAM=underrange)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MINOR)")
-  field(FLNK, "$(FLNK=)")
-  field(TSE,  "$(TSE=-2)")
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output1"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B0")
+  field(ZNAM, "off")
+  field(ONAM, "on")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output2.PROC")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-OvR"){
-  field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): CH$(CH_ID) underrange")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CH${CH_ID}_OVR?")
-  field(ZNAM, "$(ZNAM=valid)")
-  field(ONAM, "$(ONAM=overrange)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MINOR)")
-  field(FLNK, "$(FLNK=)")
-  field(TSE,  "$(TSE=-2)")
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output2"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B1")
+  field(ZNAM, "off")
+  field(ONAM, "on")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output3.PROC")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Wrn"){
-  field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): CH$(CH_ID) warning")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CH${CH_ID}_WRN?")
-  field(ZNAM, "$(ZNAM=OK)")
-  field(ONAM, "$(ONAM=WARNING)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MINOR)")
-  field(FLNK, "$(FLNK=)")
-  field(TSE,  "$(TSE=-2)")
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output3"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B2")
+  field(ZNAM, "off")
+  field(ONAM, "on")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output4.PROC")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Err"){
-  field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): CH$(CH_ID) error")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CH${CH_ID}_ERR?")
-  field(ZNAM, "$(ZNAM=OK)")
-  field(ONAM, "$(ONAM=ERROR)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MAJOR)")
-  field(FLNK, "$(FLNK=)")
-  field(TSE,  "$(TSE=-2)")
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output4"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B3")
+  field(ZNAM, "off")
+  field(ONAM, "on")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output5.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Output5"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B4")
+  field(ZNAM, "off")
+  field(ONAM, "on")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Inv-Alrm.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Inv-Alrm"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.B9")
+  field(ZNAM, "valid")
+  field(ONAM, "invalid")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Udr-Alrm.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Udr-Alrm"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.BA")
+  field(ZNAM, "OK")
+  field(ONAM, "underrange")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Ovr-Alrm.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Ovr-Alrm"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.BB")
+  field(ZNAM, "OK")
+  field(ONAM, "overrange")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Wrn-Alrm.PROC")
+}
+
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Wrn-Alrm"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.BE")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Warning")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MINOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Err-Alrm.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Err-Alrm"){
+  field(DESC, "$(HWTYPE): CH$(CH_ID): Error")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-CH$(CH_ID)-Stat.BF")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Error")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
 }

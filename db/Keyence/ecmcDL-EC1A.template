@@ -1,27 +1,39 @@
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-ERROR"){
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Stat"){
+  field(DESC, "$(HWTYPE): Status Word")
   field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): Error Status")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).ERR_STATUS?")
-  field(ZNAM, "$(ZNAM=Zero)")
-  field(ONAM, "$(ONAM=One)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MAJOR)")
-  field(FLNK, "$(FLNK=)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),0xFFFF,$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).DEV_STATUS?")
+  field(SCAN, "I/O Intr")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Err-Alrm.PROC")
   field(TSE,  "$(TSE=-2)")
 }
 
-record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-WARNING"){
-  field(PINI, "$(PINI=1)")
-  field(DESC, "$(HWTYPE): Warning Status")
-  field(DTYP, "$(DTYP=asynInt32)")
-  field(SCAN, "$(SCAN=I/O Intr)")
-  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).WRN_STATUS?")
-  field(ZNAM, "$(ZNAM=Zero)")
-  field(ONAM, "$(ONAM=One)")
-  field(ZSV,  "$(ZSV=NO_ALARM)")
-  field(OSV,  "$(OSV=MINOR)")
-  field(FLNK, "$(FLNK=)")
-  field(TSE,  "$(TSE=-2)")
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Err-Alrm"){
+  field(DESC, "$(HWTYPE): Dev: Error")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Stat.B0")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Error")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Wrn-Stat.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Wrn-Alrm"){
+  field(DESC, "$(HWTYPE): Dev: Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Stat.B1")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Warning")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MINOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Val-Alrm.PROC")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Val-Alrm"){
+  field(DESC, "$(HWTYPE): Dev: Val OK")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Stat.B4")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Warning")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MINOR")
+  # field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Dev-Err-Alrm.PROC")
 }

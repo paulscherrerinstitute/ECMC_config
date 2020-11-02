@@ -12,13 +12,21 @@ file "ecmcDL-EC1A.template"
 
 file "ecmcDL-EC1A_chX.template"
 {
-  pattern { CH_ID,  EGU,  ESLO,   PREC }
-          { 1,      "mm", 0.0001, 4    }
-          { 2,      "mm", 0.0001, 4    }
-          { 3,      "mm", 0.0001, 4    }
-          { 4,      "mm", 0.0001, 4    }
-          { 5,      "mm", 0.0001, 4    }
-          { 6,      "mm", 0.0001, 4    }
-          { 7,      "mm", 0.0001, 4    }
-          { 8,      "mm", 0.0001, 4    }
+  pattern { CH_ID,  EGU,  ESLO,   PREC, LOPR, HOPR, LOLO, LOW,  HIGH, HIHI, LLSV,   LSV,    HSV,    HHSV  }
+          { 1,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 2,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 3,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 4,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 5,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 6,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 7,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 8,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          { 9,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {10,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {11,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {12,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {13,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {14,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+          {15,      "mm", 0.0001, 4,    0,    12    0,    1,    5,    8,    MAJOR,  MINOR,  MINOR,  MAJOR }
+
 }
