@@ -1,22 +1,19 @@
 #-d /**
-#-d   \brief hardware script for EL3604
-#-d   \details 4-channel 24bit analog input terminal for Condition Monitoring (IEPE) with oversampling
+#-d   \brief hardware script for EL3602
+#-d   \details 2-channel 24bit analog input terminal for Condition Monitoring (IEPE) with oversampling
 #-d
-#-d   Minimum sample time          = 50000ns  (oversampling rate of 20 in 1kHz ec rate)
-#-d   Maximum Oversampling factor  = 100      (if ec rate is 200Hz then a NELM of 100 can be used)
+#-d   Minimum sample time          = 20000ns  (oversampling rate of 50 in 1kHz ec rate)
+#-d   Maximum Oversampling factor  = 100      (if ec rate is 500Hz then a NELM of 100 can be used)
 #-d
 #-d   \author Anders Sandstroem
 #-d   \file
 #-d */
-#############################################
-# WARNING!!!!! THIS HARDWARE CONFIG IS NOT 100% TESTED. HAVE ONLY BEEN TESTED WITHOUT ACCELEROMETERS AND WITH NELM LOWER THAN 5 ON RASPI.
-#############################################
 
-epicsEnvSet("ECMC_EC_HWTYPE"             "ELM3604")
+epicsEnvSet("ECMC_EC_HWTYPE"             "ELM3602")
 epicsEnvSet("ECMC_EC_VENDOR_ID"          "0x2")
-epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x50219349")
+epicsEnvSet("ECMC_EC_PRODUCT_ID"         "0x50219329")
 epicsEnvSet("ECMC_OVER_SAMP_MAX"         "100")
-epicsEnvSet("ECMC_SAMP_TIME_MIN"         "50000")
+epicsEnvSet("ECMC_SAMP_TIME_MIN"         "20000")
 
 #- ############################################
 
@@ -134,48 +131,6 @@ ecmcConfigOrDie "Cfg.EcAddMemMapDT(ec$(ECMC_EC_MASTER_ID).s${ECMC_EC_SLAVE_NUM}.
 #-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a31,0x6015,0x1,U32,CH${ECMC_CH}_TIMESTAMP_L32)"
 #-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a31,0x6015,0x2,U32,CH${ECMC_CH}_TIMESTAMP_H32)"
 
-#-  CH 3
-epicsEnvSet("ECMC_CH"             "3")
-
-#-  Configuration for sync manager 2
-ecmcConfigOrDie "Cfg.EcAddEntryComplete(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1602,0x7020,0x01,16,CH${ECMC_CH}_CONTROL)"
-
-#-  Configuration for sync manager 3
-#- Calculate PDO of ch3. ECMC_PDO_TEMP=ECMC_PDO_TEMP+66
-ecmcEpicsEnvSetCalc("ECMC_PDO_CH3",${ECMC_PDO_TEMP}+66,"0x1A%02x")
-epicsEnvShow(ECMC_PDO_CH3)
-epicsEnvSet("ECMC_EC_ENTRY"       "0x6021")
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a42,0x6020,0x1,S32,CH${ECMC_CH}_STATUS)"
-
-#- Inflate all pdos with a for loop
-ecmcFileExist(${ecmccfg_DIR}ecmcELM360X_loopStep.cmd,1)
-ecmcForLoop(${ecmccfg_DIR}ecmcELM360X_loopStep.cmd,"CH_ID=${ECMC_CH}, PDO=${ECMC_PDO_CH3}, ENTRY=${ECMC_EC_ENTRY}",ECMC_LOOP_IDX,1,${NELM=1},1)
-ecmcConfigOrDie "Cfg.EcAddMemMapDT(ec$(ECMC_EC_MASTER_ID).s${ECMC_EC_SLAVE_NUM}.CH${ECMC_CH}_VALUE_1,$(ECMC_EC_ARRAY_BYTE_SIZE),2,S32,ec$(ECMC_EC_MASTER_ID).s${ECMC_EC_SLAVE_NUM}.mm.CH${ECMC_CH}_ARRAY)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a52,0x6025,0x1,S64,CH${ECMC_CH}_TIMESTAMP)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a52,0x6025,0x1,U32,CH${ECMC_CH}_TIMESTAMP_L32)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a52,0x6025,0x2,U32,CH${ECMC_CH}_TIMESTAMP_H32)"
-
-#-  CH 4
-epicsEnvSet("ECMC_CH"             "4")
-
-#-  Configuration for sync manager 2
-ecmcConfigOrDie "Cfg.EcAddEntryComplete(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},1,2,0x1603,0x7030,0x01,16,CH${ECMC_CH}_CONTROL)"
-
-#-  Configuration for sync manager 3
-#- Calculate PDO of ch4. ECMC_PDO_TEMP=ECMC_PDO_TEMP+99
-ecmcEpicsEnvSetCalc("ECMC_PDO_CH4",${ECMC_PDO_TEMP}+99,"0x1A%02x")
-epicsEnvShow(ECMC_PDO_CH4)
-epicsEnvSet("ECMC_EC_ENTRY"       "0x6031")
-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a63,0x6030,0x1,S32,CH${ECMC_CH}_STATUS)"
-
-#- Inflate all pdos with a for loop
-ecmcFileExist(${ecmccfg_DIR}ecmcELM360X_loopStep.cmd,1)
-ecmcForLoop(${ecmccfg_DIR}ecmcELM360X_loopStep.cmd,"CH_ID=${ECMC_CH}, PDO=${ECMC_PDO_CH4}, ENTRY=${ECMC_EC_ENTRY}",ECMC_LOOP_IDX,1,${NELM=1},1)
-ecmcConfigOrDie "Cfg.EcAddMemMapDT(ec$(ECMC_EC_MASTER_ID).s${ECMC_EC_SLAVE_NUM}.CH${ECMC_CH}_VALUE_1,$(ECMC_EC_ARRAY_BYTE_SIZE),2,S32,ec$(ECMC_EC_MASTER_ID).s${ECMC_EC_SLAVE_NUM}.mm.CH${ECMC_CH}_ARRAY)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a73,0x6035,0x1,S64,CH${ECMC_CH}_TIMESTAMP)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a73,0x6035,0x1,U32,CH${ECMC_CH}_TIMESTAMP_L32)"
-#-ecmcConfigOrDie "Cfg.EcAddEntryDT(${ECMC_EC_SLAVE_NUM},${ECMC_EC_VENDOR_ID},${ECMC_EC_PRODUCT_ID},2,3,0x1a73,0x6035,0x2,U32,CH${ECMC_CH}_TIMESTAMP_H32)"
-
 #- ############ Configfigure DCs
 #-  Cfg.EcSlaveConfigDC(
 #-      int slave_bus_position,
@@ -203,12 +158,8 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,0,1)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x1,0x1600,2)"
 #- CH2
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x1,0x1601,2)"
-#- CH3
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x1,0x1602,2)"
-#- CH4
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x1,0x1603,2)"
 #-PDO count
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,4,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,2,1)"
 
 #- Set used pdos (inputs)
 epicsEnvSet("ECMC_SDO_INDEX",              "0x1C13")
@@ -223,16 +174,8 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x3,0x1A10,
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x4,0x1A21,2)"
 ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x5,${ECMC_PDO_CH2},2)"
 
-#- CH3
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x6,0x1A42,2)"
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x7,${ECMC_PDO_CH3},2)"
-
-#- CH4
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x8,0x1A63,2)"
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x9,${ECMC_PDO_CH4},2)"
-
 #-PDO count
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,9,1)"
+ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,5,1)"
 
 #-Default settings from startup list in TC (seems cannot be reset?)
 #-#- CH1 
@@ -270,42 +213,6 @@ ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},$(ECMC_SDO_INDEX),0x0,9,1)"
 #-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8010,0x2E,0,2)"
 #-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8015,0x1,0,4)"
 #-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8015,0x2,65536,4)"
-#-
-#-#- CH3 
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x1,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x3,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x7,0,1)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x16,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x17,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x18,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x19,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x1A,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x1B,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x1C,0,1)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x2B,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x2C,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x2D,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8020,0x2E,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8025,0x1,0,4)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8025,0x2,65536,4)"
-#-
-#-#- CH4
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x1,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x3,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x7,0,1)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x16,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x17,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x18,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x19,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x1A,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x1B,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x1C,0,1)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x2B,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x2C,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x2D,1,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8030,0x2E,0,2)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8035,0x1,0,4)"
-#-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x8035,0x2,65536,4)"
 #-
 #- Cleanup
 epicsEnvUnset(ECMC_EC_ARRAY_BYTE_SIZE)

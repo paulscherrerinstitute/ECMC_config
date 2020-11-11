@@ -96,21 +96,19 @@ record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-alstate-op"){
 
 record(longout,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-One"){
   info(asyn:READBACK,"1")
-  field(DESC, "$(HWTYPE): 32 bits set to 1 (int=-1)")
-  field(PINI, "1")
+  field(DESC, "$(HWTYPE): 32 bits (int=-1)")  
   field(TSE, -2)
-  field(DTYP, "asynUInt32Digital")
-  field(OUT,  "@asynMask($(PORT),$(ADDR),$(MASK=0xFFFFFFFF),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).ONE?")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).ONE?")
   field(SCAN,"Passive")
 }
 
 record(longout,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Zero"){
   info(asyn:READBACK,"1")
-  field(DESC, "$(HWTYPE): 32 bits set to 0 (int=0)")
-  field(PINI, "1")
+  field(DESC, "$(HWTYPE): 32 bits (int=0)")  
   field(TSE, -2)
-  field(DTYP, "asynUInt32Digital")
-  field(OUT,  "@asynMask($(PORT),$(ADDR),$(MASK=0xFFFFFFFF),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).ZERO?")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).ZERO?")
   field(SCAN,"Passive")
 }
 

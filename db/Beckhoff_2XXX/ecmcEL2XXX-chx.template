@@ -1,4 +1,5 @@
 record(bo,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BO$(CH_ID)"){
+  info(asyn:READBACK,"1")
   field(PINI, "$(PINI=YES)")
   field(DESC, "$(DESC=$(HWTYPE): Binary Output)")
   field(DTYP, "$(DTYP=asynInt32)")

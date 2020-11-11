@@ -1,0 +1,83 @@
+#General
+epicsEnvSet("ECMC_MOTOR_NAME",            "Axis1")
+epicsEnvSet("ECMC_R",                     "Axis1-")
+epicsEnvSet("ECMC_AXIS_NO",               "1")
+epicsEnvSet("ECMC_DESC",                  "EL7201 Test")
+epicsEnvSet("ECMC_EGU",                   "mm")                       # Motor Record Unit
+epicsEnvSet("ECMC_PREC",                  "3")                        # Motor Record Precision
+epicsEnvSet("ECMC_AXISCONFIG",            "")                         # Extra parameters to driver
+epicsEnvSet("ECMC_EC_AXIS_HEALTH",        "")                         # Entry for axis health output (example: ec0.s1.BO_1.0)
+epicsEnvSet("ECMC_MOD_RANGE" ,            "360")                        # Modulo range (traj setpoints and encoder values will be in range 0..ECMC_MOD_RANGE)
+epicsEnvSet("ECMC_MOD_TYPE",              "2")                        # For positioning and MOD_RANGE>0: 0 = Normal, 1 = Always Fwd, 2 = Always Bwd, 3 = Closest Distance
+
+#Encoder
+epicsEnvSet("ECMC_ENC_SCALE_NUM"          "360")
+epicsEnvSet("ECMC_ENC_SCALE_DENOM"        "1048576")
+epicsEnvSet("ECMC_ENC_TYPE"               "0")                        # Type: 0=Incremental, 1=Absolute (in this case its single turn absolute (needs homing))
+epicsEnvSet("ECMC_ENC_BITS"               "32")                       # Total bit count of encoder raw data
+epicsEnvSet("ECMC_ENC_ABS_BITS",          "20")                       # Absolute bit count (for absolute encoders) always least significant part of ECMC_ENC_BITS
+epicsEnvSet("ECMC_ENC_ABS_OFFSET"         "0")                        # Encoder offset in eng units (for absolute encoders)
+epicsEnvSet("ECMC_EC_ENC_ACTPOS",         "ec0.s$(ECMC_EC_SLAVE_NUM).POSITION")          # Ethercat entry for actual position input (encoder)
+
+#Drive
+epicsEnvSet("ECMC_DRV_TYPE"               "1")                                           # Stepper: 0. DS402: 1 (DS402 = servos and advanced stepper drives)
+# Scalings: Amplifier Max 8000Hz = 2880000 deg/s (8kHz Reverse engineered) 
+epicsEnvSet("ECMC_DRV_SCALE_NUM"          "2880000")                                     # Fastest speed in engineering units
+epicsEnvSet("ECMC_DRV_SCALE_DENOM"        "2147483648")                                  # I/O range for ECMC_EC_ALIAS_DRV_VELO_SET
+epicsEnvSet("ECMC_EC_DRV_CONTROL",        "ec0.s$(ECMC_EC_SLAVE_NUM).CONTROL")       # Ethercat entry for control word or bit output
+epicsEnvSet("ECMC_EC_DRV_STATUS",         "ec0.s$(ECMC_EC_SLAVE_NUM).STATUS")        # Ethercat entry for status word or bit input
+epicsEnvSet("ECMC_EC_DRV_VELOCITY",       "ec0.s$(ECMC_EC_SLAVE_NUM).VELOCITY_SETPOINT") # Ethercat entry for velocity setpoint output
+epicsEnvSet("ECMC_EC_DRV_REDUCE_TORQUE",  "")                                            # Ethercat entry for reduce torque output
+epicsEnvSet("ECMC_EC_DRV_BRAKE",          "")                                            # Ethercat entry for brake output
+epicsEnvSet("ECMC_DRV_BRAKE_OPEN_DLY_TIME",    "0")                                      # Brake timing parameter in cycles (default 1kHz)
+epicsEnvSet("ECMC_DRV_BRAKE_CLOSE_AHEAD_TIME", "0")                                      # Brake timing parameter in cycles (default 1kHz)
+
+#Trajectory
+epicsEnvSet("ECMC_VELO",                  "1000.0")
+epicsEnvSet("ECMC_JOG_VEL",               "3600")
+epicsEnvSet("ECMC_JAR",                   "0.0")                      # JAR defaults to VELO/ACCL
+epicsEnvSet("ECMC_ACCL",                  "1.0")
+epicsEnvSet("ECMC_EMERG_DECEL",           "${ECMC_ACCL}")             # Emergency deceleration
+epicsEnvSet("ECMC_MRES",                  "0.001")
+
+#Homing
+epicsEnvSet("ECMC_HOME_PROC",             "$(SM_HOMEPROC=1)")
+epicsEnvSet("ECMC_HOME_POS",              "$(SM_HOMEPOS=0.0)")
+epicsEnvSet("ECMC_HOME_VEL_TO",           "$(SM_HVELTP=5)")
+epicsEnvSet("ECMC_HOME_VEL_FRM",          "$(SM_HVELTP=4)")
+epicsEnvSet("ECMC_HOME_ACC",              "$(SM_HOMEACC=21)")
+epicsEnvSet("ECMC_HOME_DEC",              "$(SM_HOMEDEC=100)")
+
+#Controller
+epicsEnvSet("ECMC_CNTRL_KP",              "50")
+epicsEnvSet("ECMC_CNTRL_KI",              "0.1")
+epicsEnvSet("ECMC_CNTRL_KD",              "0.0")
+epicsEnvSet("ECMC_CNTRL_KFF",             "1.0")
+
+#Monitoring
+# Switches
+epicsEnvSet("ECMC_EC_MON_LOWLIM",         "ec0.s$(ECMC_EC_SLAVE_NUM).ONE.0")           #  Ethercat entry for low limit switch input
+epicsEnvSet("ECMC_EC_MON_HIGHLIM",        "ec0.s$(ECMC_EC_SLAVE_NUM).ONE.0")           #  Ethercat entry for high limit switch inpuit
+epicsEnvSet("ECMC_EC_MON_HOME_SWITCH",    "ec0.s$(ECMC_EC_SLAVE_NUM).ONE.0")           #  Ethercat entry for home switch input
+epicsEnvSet("ECMC_EC_MON_EXT_INTERLOCK",  "ec0.s$(ECMC_EC_SLAVE_NUM).ONE.0")           #  Ethercat entry for external interlock input
+
+# Softlimits (disable with 0,0,0)
+epicsEnvSet("ECMC_SOFT_LOW_LIM",          "$(SM_DLLM=0)")
+epicsEnvSet("ECMC_SOFT_HIGH_LIM",         "$(SM_DHLM=0)")
+epicsEnvSet("ECMC_DXLM_ENABLE",           "0")
+
+# Position lag
+epicsEnvSet("ECMC_MON_LAG_MON_TOL",       "5")
+epicsEnvSet("ECMC_MON_LAG_MON_TIME",      "100")
+epicsEnvSet("ECMC_MON_LAG_MON_ENA",       "0")
+
+# At target
+epicsEnvSet("ECMC_MON_AT_TARGET_TOL",     "0.3")
+epicsEnvSet("ECMC_MON_AT_TARGET_TIME",    "100")
+epicsEnvSet("ECMC_MON_AT_TARGET_ENA",     "1")
+
+# Velocity
+epicsEnvSet("ECMC_MON_VELO_MAX",          "100.0")
+epicsEnvSet("ECMC_MON_VELO_MAX_TRAJ_TIME","100")
+epicsEnvSet("ECMC_MON_VELO_MAX_DRV_TIME", "200")
+epicsEnvSet("ECMC_MON_VELO_MAX_ENA",      "0")

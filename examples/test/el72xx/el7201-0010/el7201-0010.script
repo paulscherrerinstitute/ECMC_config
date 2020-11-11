@@ -1,9 +1,5 @@
 ##############################################################################
-## Example config for el3604
-## Oversampling factor can be set by the changing the "NELM" arg to addSlave
-## Note: The el3702 does not support any value of NELM. The EtherCAT bus period in nanoseconds diveded by 
-##       oversampling factor must be an integer.  "(1/EC_RATE*1E9) / NELM" 
-##       
+## Example config for el7201-0010
 
 ##############################################################################
 ## Initiation:
@@ -21,26 +17,23 @@ require ecmccfg develop
 
 
 # run module startup.cmd (only needed at ESS  PSI auto call at require)
-$(ECMCCFG_INIT)$(SCRIPTEXEC) ${ecmccfg_DIR}startup.cmd, "IOC=$(IOC),ECMC_VER=develop,stream_VER=2.8.10, EC_RATE=1000"
+$(ECMCCFG_INIT)$(SCRIPTEXEC) ${ecmccfg_DIR}startup.cmd, "IOC=$(IOC),ECMC_VER=6.2.3,stream_VER=2.8.10"
 
 ##############################################################################
-## Config hardware:
+## Configure hardware
 
-epicsEnvSet("ECMC_EC_SLAVE_NUM",              "0")
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=$(ECMC_EC_SLAVE_NUM), HW_DESC=EK1100"
-
-
-# Note NELM equals oversampling factor in this case
-epicsEnvSet("ECMC_EC_SLAVE_NUM",              "1")
-${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "SLAVE_ID=$(ECMC_EC_SLAVE_NUM), HW_DESC=ELM3604, NELM=${NELM=20}"
-
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C32,0x1,2,2)"
-ecmcConfigOrDie "Cfg.EcAddSdo(${ECMC_EC_SLAVE_NUM},0x1C33,0x1,2,2)"
-
-ecmcConfigOrDie "Cfg.EcSelectReferenceDC(0,0)"
+epicsEnvSet("ECMC_EC_SLAVE_NUM",              "35")
+epicsEnvSet("ECMC_EC_SLAVE_NUM_DRIVE",        "$(ECMC_EC_SLAVE_NUM)")
+${SCRIPTEXEC} ${ecmccfg_DIR}configureSlave.cmd, "SLAVE_ID=$(ECMC_EC_SLAVE_NUM), HW_DESC=EL7201-0010, CONFIG=-Motor-Beckhoff-AM8121-0F00-0000"
 
 #Apply hardware configuration
 ecmcConfigOrDie "Cfg.EcApplyConfig(1)"
+
+##############################################################################
+## AXIS 1
+#
+epicsEnvSet("DEV",      "$(IOC)")
+$(SCRIPTEXEC) ($(ecmccfg_DIR)configureAxis.cmd, CONFIG=./cfg/el7201_1.ax)
 
 ##############################################################################
 ############# Configure diagnostics:
@@ -48,6 +41,9 @@ ecmcConfigOrDie "Cfg.EcApplyConfig(1)"
 ecmcConfigOrDie "Cfg.EcSetDiagnostics(1)"
 ecmcConfigOrDie "Cfg.EcEnablePrintouts(0)"
 ecmcConfigOrDie "Cfg.EcSetDomainFailedCyclesLimit(100)"
+ecmcConfigOrDie "Cfg.SetDiagAxisIndex(1)"
+ecmcConfigOrDie "Cfg.SetDiagAxisFreq(2)"
+ecmcConfigOrDie "Cfg.SetDiagAxisEnable(0)"
 
 # go active
 $(SCRIPTEXEC) ($(ecmccfg_DIR)setAppMode.cmd)
