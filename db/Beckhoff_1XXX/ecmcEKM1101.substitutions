@@ -12,17 +12,17 @@ file "ecmcEKM1101-DEV.template"
 
 file "ecmcEKM1101-ACC.template"
 {
-  pattern {CH_ID, LINR,    ESLO,            EOFF,   EGU,     PREC, LOW, LOLO, HIGH, HIHI, HYST, LLSV,       LSV,        HSV,        HHSV      }
-          {X,     "SLOPE", 1,        0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
-          {Y,     "SLOPE", 1,        0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
-          {Z,     "SLOPE", 1,        0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+  pattern {CH_ID, LINR,    ESLO,  EOFF,   EGU,     PREC, LOW, LOLO, HIGH, HIHI, HYST, LLSV,       LSV,        HSV,        HHSV      }
+          {X,     "SLOPE", 0.001, 0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+          {Y,     "SLOPE", 0.001, 0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+          {Z,     "SLOPE", 0.001, 0,      "g",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
 }
 
 file "ecmcEKM1101-VOL.template"
 {
-  pattern {CH_ID, LINR,    ESLO,            EOFF,   EGU,     PREC, LOW, LOLO, HIGH, HIHI, HYST, LLSV,       LSV,        HSV,        HHSV      }
-          {USIN,  "SLOPE", 2.3283064e-8,    0,      "V",     0,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
-          {UPIN,  "SLOPE", 2.3283064e-8,    0,      "V",     0,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
-          {UPOUT, "SLOPE", 2.3283064e-8,    0,      "V",     0,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+  pattern {CH_ID, LINR,    ESLO,  EOFF,   EGU,     PREC, LOW, LOLO, HIGH, HIHI, HYST, LLSV,       LSV,        HSV,        HHSV      }
+          {USIN,  "SLOPE", 1,     0,      "V",     3,    23,  21,   0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+          {UPIN,  "SLOPE", 1,     0,      "V",     3,    23,  21,   0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
+          {UPOUT, "SLOPE", 1,     0,      "V",     3,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
 }
 
