@@ -5,7 +5,7 @@ file "ecmcEcSlave.template"
 }
 
 #Actually the scalinging is between 0..10.737V (see manual)
-file "ecmcEL3XXX-chX.template"
+file "ecmcEX3XXX-chX.template"
 {
   pattern {CH_ID, LINR,    ESLO,             EOFF,   EGU,        PREC, LOW, LOLO,  HIGH,  HIHI,    HYST, LLSV,    LSV,     HSV,     HHSV   }
           {1,     "SLOPE", 0.122072175172571,  0,      "V",        3,    0,   -1,    10,    10.5,    0,    "MAJOR", "MINOR", "MINOR", "MAJOR"}
