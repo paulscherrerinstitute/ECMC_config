@@ -1,8 +1,0 @@
-record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Buttons")
-{
-  field(DESC, "$(HWTYPE): Buttons Word")
-  field(PINI, "$(PINI=1)")
-  field(DTYP, "asynUInt32Digital")
-  field(INP,  "@asynMask($(PORT),$(ADDR=0),0xFFFFFFFF,$(TIMEOUT=1))ec$(MASTER_ID).s$(SLAVE_POS).BUTTONS")
-  field(SCAN, "I/O Intr")
-}
