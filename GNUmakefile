@@ -3,7 +3,7 @@ include $(EPICS_MODULES)/makeUtils/latest/utils.mk
 
 MODULE=ecmccfg
 
-LIBVERSION = dev
+LIBVERSION = MCS2
 
 BUILDCLASSES = Linux
 EXCLUDE_VERSIONS=3 7.0.3
@@ -39,4 +39,3 @@ TEMPLATES+=$(wildcard ./db/*/*.db)
 TEMPLATES+=$(wildcard ./db/*/*.template)
 TEMPLATES+=$(wildcard ./db/*/*.substitutions)
 TEMPLATES+=$(wildcard ./db/*/*.subs)
-
