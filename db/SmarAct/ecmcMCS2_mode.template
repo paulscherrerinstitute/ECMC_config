@@ -1,0 +1,28 @@
+record(mbbi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv${CH_ID}-ModeAct"){
+  field(DESC, "$(HWTYPE): Mode")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),$(MASK=0xFFFFFFFF),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).modeActual${CH_ID}?")
+  field(ZRST, "None")
+  field(ZRVL, 0)
+  field(ONST, "Profile Position")
+  field(ONVL, 1)
+  field(TWST, "Homing")
+  field(TWVL, 6)
+  field(THST, "CSP")
+  field(THVL, 8)
+}
+
+record(mbbo,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv${CH_ID}-ModeSet"){
+  field(DESC, "latch source selector")
+  field(DTYP, "asynUInt32Digital")
+  field(ZRST, "None")
+  field(ZRVL, 0)
+  field(ONST, "Profile Position")
+  field(ONVL, 1)
+  field(TWST, "Homing")
+  field(TWVL, 6)
+  field(THST, "CSP")
+  field(THVL, 8)
+  field(OUT,  "@asynMask($(PORT),$(ADDR=0),$(MASK=0xFFFFFFFF),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).MODE${CH_ID}=")
+}

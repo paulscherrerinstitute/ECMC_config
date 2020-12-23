@@ -20,7 +20,16 @@ file "ecmcEncoder_32bit.template"
           {03,     "SLOPE", 1,      0,      "Raw",      0,    0,   0,    0,    0,    0,    "NO_ALARM", "NO_ALARM", "NO_ALARM", "NO_ALARM"}
 }
 
-file "controlWorld.template"
+file "controlWord.template"
+{
+  pattern {CH_ID}
+          {01   }
+          {02   }
+          {03   }
+}
+
+
+file "ecmcMCS2_mode.template"
 {
   pattern {CH_ID}
           {01   }
