@@ -1,0 +1,22 @@
+record(mbbo,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-ModeSet"){
+  field(DESC, "mode selector")
+  field(ZRST, "None")
+  field(ZRVL, 0)
+  field(ONST, "Profile Position")
+  field(ONVL, 1)
+  field(TWST, "Cal")
+  field(TWVL, 65535)
+  field(SXST, "Homing")
+  field(SXVL, 6)
+  field(EIST, "CSP")
+  field(EIVL, 8)
+  field(OMSL, "supervisory")
+  field(OUT,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-ModeApply PP")
+}
+
+record(dfanout,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-ModeApply") {
+  field(DESC,  "description")
+  field(OUTA,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv01-ModeSet PP")
+  field(OUTB,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv02-ModeSet PP")
+  field(OUTC,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv03-ModeSet PP")
+}
