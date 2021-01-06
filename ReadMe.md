@@ -18,6 +18,15 @@ You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
+## Build
+by default this module is only build for RHEL7 and Epics >=R7.0.4
+```bash
+make [LIBVERSION] [clean] install
+```
+check the module loads for version `dev`, Epics R7.0.4.1 and ECMC version `poslag`, note `MASTER_ID=1` which runs ECMC in master-less mode.
+```bash
+iocsh -7.0.4.1 -r "ecmccfg,dev 'ECMC_VER=posLag,MASTER_ID=-1'"
+```
 
 ## Purpose
 
@@ -25,14 +34,22 @@ The configuration framework contains the necessary files to configure an EPICS I
 
 ## provided common user commands
 
-*  addMaster.cmd
-*  addSlave.cmd
-*  addSlaveKL.cmd
-*  applySlaveConfig.cmd
-*  configureSlave.cmd
-*  applyConfig.cmd
-*  loadPLCFile.cmd
-*  setAppMode.cmd
+* addAxis.cmd
+* addDataStorage.cmd
+* addMaster.cmd
+* addSlave.cmd
+* addSlaveKL.cmd
+* addVirtualAxis.cmd
+* applyAxisSynchronization.cmd
+* applyConfig.cmd
+* applySlaveConfig.cmd
+* configureAxis.cmd
+* configureSlave.cmd
+* configureVirtualAxis.cmd
+* loadPLCFile.cmd
+* loadPlugin.cmd
+* setAppMode.cmd
+* setDiagnostics.cmd
 
 ## Example IOC
 
@@ -45,8 +62,10 @@ The configuration framework contains the necessary files to configure an EPICS I
     ```bash
       # slave 0 {ecmcEK1100}
       ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EK1100"
+      # SLAVE_ID is automatically incremented
       # slave 1 {ecmcEL1018}
-      ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL1018, SLAVE_ID=1"
+      ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL1018"
+      # skip slaves 2..6
       # slave 7 {ecmcEL2008}, with optional SLAVE_ID
       ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=E2008, SLAVE_ID=7"
     ```
@@ -55,8 +74,14 @@ The configuration framework contains the necessary files to configure an EPICS I
       # slave 8 {ecmcEL7037}, configure slave with optional SLAVE_ID
       ${SCRIPTEXEC} ${ecmccfg_DIR}configureSlave.cmd, "HW_DESC=EL7037, CONFIG=-Motor-Nanotec-ST4118L1804-B, SLAVE_ID=8"
       # slave 9 {ecmcEL7037}, addSlave, with immediate call off applySlaveConfig
+      # slave with global configuration
       ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd,       "HW_DESC=EL7037"
       ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig,   "CONFIG=-Motor-Nanotec-ST4118L1804-B"
+      # slave with local configuration, in this case provided by the module `ECMC_AGIR`
+      epicsEnvSet("CFG_ROOT", "${ECMC_AGIR_DIR}/")
+      ${SCRIPTEXEC} ${ecmccfg_DIR}addSlave.cmd, "HW_DESC=EP7211-0034_ALL"
+      ${SCRIPTEXEC} ${ecmccfg_DIR}applySlaveConfig.cmd, "LOCAL_CONFIG=${CFG_ROOT}AM8211_AGIR.cfg"
+
     ```
 
 4.  apply the configuration
