@@ -1,0 +1,177 @@
+record(ai,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Cmd-RB"){
+  field(DESC, "$(HWTYPE): Drive Control Word RB")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).STM_CONTROL?")
+  field(PREC, 0)
+  field(SCAN, "I/O Intr")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(ao,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Cmd"){
+  field(DESC, "$(HWTYPE): Drive Control Word")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).STM_CONTROL=")
+  field(PREC, 0)
+}
+
+record(ai,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Spd-RB"){
+  field(DESC, "$(HWTYPE): Drive Speed Setpoint RB")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).VELOCITY_SETPOINT?")
+  field(PREC, 0)
+  field(SCAN, "I/O Intr")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(ao,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Spd"){
+  field(DESC, "$(HWTYPE): Drive Speed Setpoint")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).VELOCITY_SETPOINT=")
+  field(PREC, 0)
+}
+
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat"){
+  field(DESC, "$(HWTYPE): Drive Status Word")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),$(MASK=0xFFFFFFFF),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).STM_STATUS?")
+  field(SCAN, "I/O Intr")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Wrn-Alrm.PROC")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(mbbi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat_enum"){
+  field(DESC, "$(HWTYPE): Drive Status Word")
+  field(ZRST,  "Ready")
+  field(ONST,  "Switched on")
+  field(TWST,  "Operation Enabled")
+  field(THST,  "Fault")
+  field(FRST,  "Voltage enabled")
+  field(FVST,  "Quick Stop")
+  field(SXST,  "Switch on disabled")
+  field(SVST,  "Warning")
+  field(EIST,  "Trajectory aborted")
+  field(NIST,  "Remote")
+  field(TEST,  "Target Reached")
+  field(ELST,  "Internal Limit Active")
+  field(TVST,  "n/a")
+  field(TTST,  "n/a")
+  field(FTST,  "Moving")
+  field(FFST,  "Homed")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Wrn-Alrm"){
+  field(DESC, "$(HWTYPE): Drive Warning")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat.B7")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Warning")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MINOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Err-Alrm")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Err-Alrm"){
+  field(DESC, "$(HWTYPE): Drive Error")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat.B3")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Error")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-QStp-Alrm")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-QStp-Alrm"){
+  field(DESC, "$(HWTYPE): Drive in Quick Stop")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat.B5")
+  field(ZNAM, "Q Stop")
+  field(ONAM, "Q Stop OK")
+  field(ZSV,  "MAJOR")
+  field(OSV,  "NO_ALARM")
+  field(FLNK, "")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Lim-Alrm"){
+  field(DESC, "$(HWTYPE): Drive Internal Limit Active")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat.BB")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Limit Active")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Flw-Alrm")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Flw-Alrm"){
+  field(DESC, "$(HWTYPE): Drive Following Error")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Stat.BD")
+  field(ZNAM, "No Alarm")
+  field(ONAM, "Following Error")
+  field(ZSV,  "NO_ALARM")
+  field(OSV,  "MAJOR")
+  field(FLNK, "")
+}
+
+record(ai,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Drv-Curr"){
+  field(DESC, "$(HWTYPE): Drive Current")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec$(MASTER_ID).s$(SLAVE_POS).CURRENT?")
+  field(PREC, 2)
+  field(SCAN, "I/O Intr")
+  field(LINR, "SLOPE")
+  field(ESLO, "0.01")
+  field(EOFF, 0)
+  field(EGU,  "A")
+  field(HOPR, "5")
+  field(TSE,  "$(TSE=-2)")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-Drv-FE"){
+  field(DESC, "${HWTYPE}: Drive FE")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.FOLLOWING_ERROR?")
+  field(PREC, 1)
+  field(TSE,  "${TSE=-2}")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-Drv-Vel"){
+  field(DESC, "${HWTYPE}: Drive FE")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.VELOCITY?")
+  field(PREC, 1)
+  field(TSE,  "${TSE=-2}")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-Drv-Trq"){
+  field(DESC, "${HWTYPE}: Drive FE")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.TORQUE?")
+  field(PREC, 1)
+  field(TSE,  "${TSE=-2}")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-Drv-Volt"){
+  field(DESC, "${HWTYPE}: Drive DC Voltage")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.DC_VOLTAGE?")
+  field(PREC, 1)
+  field(SCAN, "I/O Intr")
+  field(LINR, "SLOPE")
+  field(ESLO, 0.001)
+  field(EOFF, 0)
+  field(EGU,  "V")
+  field(LOW,  22)
+  field(LOLO, 18)
+  field(HYST, 5)
+  field(HOPR, 90)
+  field(LLSV, "MAJOR")
+  field(LSV,  "MINOR")
+  field(TSE,  "${TSE=-2}")
+}

@@ -1,0 +1,115 @@
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BIx"){
+  field(DESC, "$(HWTYPE): I/O Binary Inputs")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),$(MASK=0xFFFFFFFF),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).INPUTS?")
+  field(SCAN, "I/O Intr")
+  field(TSE,  "$(TSE=-2)")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BI_")
+}
+
+record(calc, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BI_") {
+  field(INPA,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BIx")
+  field(CALC,  "A/65536")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BIU")
+}
+
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BIU"){
+  field(DESC, "$(HWTYPE): I/O Binary Inputs")
+  field(PINI, "$(PINI=1)")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BI_")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-AIR")
+}
+
+record(bi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-AIR"){
+  field(DESC, "$(HWTYPE): Air available")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-BIU.B3")
+  field(ZNAM, "Air NOK")
+  field(ONAM, "Air OK")
+  field(ZSV,  "MAJOR")
+  field(OSV,  "NO_ALARM")
+}
+
+record(mbbiDirect,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat"){
+  field(DESC, "$(HWTYPE): Man Status Word")
+  field(PINI, "$(PINI=1)")
+  field(DTYP, "asynUInt32Digital")
+  field(INP,  "@asynMask($(PORT),$(ADDR=0),$(MASK=0xFFFFFFFF),$(TIMEOUT=1))T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynUInt32Digital/ec$(MASTER_ID).s$(SLAVE_POS).MAN_STATUS?")
+  field(SCAN, "I/O Intr")
+  field(TSE,  "$(TSE=-2)")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_enumL")
+}
+
+record(mbbi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_enumL"){
+  field(DESC, "$(HWTYPE): Drive Status Word")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat")
+  field(ZRST, "Short circuit detected")
+  field(ONST, "Amp over temperature")
+  field(TWST, "Over voltage")
+  field(THST, "Under voltage")
+  field(FRST, "Mot temp sensor active")
+  field(FVST, "Feedback error")
+  field(SXST, "Motor phasing error")
+  field(SVST, "Current output limited")
+  field(EIST, "Voltage output limited")
+  field(NIST, "Pos limit switch active")
+  field(TEST, "Neg limit switch active")
+  field(ELST, "Enable input not active")
+  field(TVST, "Amp disabled by software")
+  field(TTST, "Trying to stop motor")
+  field(FTST, "Motor brake activated")
+  field(FFST, "PWM outputs disabled")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_upper")
+}
+
+record(calc, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_upper") {
+  field(INPA,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat")
+  field(CALC,  "A/65536")
+  field(FLNK, "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_enumU")
+}
+
+record(mbbi,"$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_enumU"){
+  field(DESC, "$(HWTYPE): Drive Status Word")
+  field(INP,  "$(P)ec$(MASTER_ID)-s$(SLAVE_POS)-$(HWTYPE)-Man-Stat_upper")
+  field(SHFT, "16")
+  field(ZRST, "Pos SW limit cond")
+  field(ONST, "Neg SW limit cond")
+  field(TWST, "Tracking error")
+  field(THST, "Tracking warning")
+  field(FRST, "Amp in a reset cond")
+  field(FVST, "Position has wrapped")
+  field(SXST, "Amplifier fault")
+  field(SVST, "Vel limit reached")
+  field(EIST, "Accl limit reached")
+  field(NIST, "Position Error")
+  field(TEST, "Home switch is active")
+  field(ELST, "In motion")
+  field(TVST, "Velocity window")
+  field(TTST, "Phase not yet initialized")
+  field(FTST, "Command fault")
+  field(FFST, "unused")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-AI1"){
+  field(DESC, "${HWTYPE}: Analog Input 1")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.ANALOG_REF?")
+  field(PREC, 3)
+  field(SCAN, "I/O Intr")
+  field(LINR, "SLOPE")
+  field(ESLO, 0.001)
+  field(EOFF, 0)
+  field(EGU,  "V")
+  field(TSE,  "${TSE=-2}")
+}
+
+record(ai,"${P}ec${MASTER_ID}-s${SLAVE_POS}-${HWTYPE}-MoO"){
+  field(DESC, "${HWTYPE}: Mode of Operation")
+  field(PINI, "${PINI=1}")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn(${PORT},${ADDR},${TIMEOUT})T_SMP_MS=$(T_SMP_MS=1000)/TYPE=asynInt32/ec${MASTER_ID}.s${SLAVE_POS}.MOO_RB?")
+  field(PREC, 0)
+  field(SCAN, "I/O Intr")
+  field(TSE,  "${TSE=-2}")
+}
